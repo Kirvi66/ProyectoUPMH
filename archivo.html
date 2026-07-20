@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Página</title>
+    <title>Brújula | Lista de tareas</title>
     <link rel="stylesheet" href="archivo.css">
 </head>
 <body>
-    <div class="contenedor">
-        <h1>Lista de tareas</h1>
+    <main class="contenedor">
+        <header class="encabezado">
+            <p class="etiqueta">Organiza tu día</p>
+            <h1>Lista de tareas</h1>
+            <p class="descripcion">Anota lo importante, define una fecha y avanza paso a paso.</p>
+        </header>
 
         <div class="agregar-tarea">
-            <input type="text" id="input-tarea" placeholder="Escribe una tarea nueva...">
-            <label for="fecha-vencimiento">Fecha de vencimiento</label>
-            <input type="date" id="fecha-vencimiento">
+            <label class="campo campo-tarea" for="input-tarea">
+                <span>Tarea</span>
+                <input type="text" id="input-tarea" placeholder="Ejemplo: terminar la presentación">
+            </label>
+            <label class="campo campo-fecha" for="fecha-vencimiento">
+                <span>Fecha de vencimiento</span>
+                <input type="date" id="fecha-vencimiento">
+            </label>
             <button id="btn-agregar">Agregar</button>
         </div>
 
@@ -22,7 +31,7 @@
         </p>
 
         <ul id="lista-tareas"></ul>
-    </div>
+    </main>
 
     <script src="archivo.js"></script>
 </body>
