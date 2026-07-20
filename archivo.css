@@ -255,6 +255,37 @@ h1 {
     text-decoration: line-through;
 }
 
+.pie-pagina {
+    position: relative;
+    z-index: 1;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--borde);
+}
+
+.pie-pagina h2 {
+    margin-bottom: 0.75rem;
+    color: var(--azul-noche);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.integrantes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    list-style: none;
+}
+
+.integrantes li {
+    padding: 0.38rem 0.6rem;
+    color: var(--tinta-suave);
+    font-size: 0.78rem;
+    background: #eef5f8;
+    border-radius: 999px;
+}
+
 @media (max-width: 680px) {
     body {
         padding: 1rem 0.7rem;
