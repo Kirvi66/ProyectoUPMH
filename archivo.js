@@ -2,12 +2,25 @@
 // Programador 3
 
 const inputTarea = document.getElementById('input-tarea');
+const inputFecha = document.getElementById('fecha-vencimiento');
 const btnAgregar = document.getElementById('btn-agregar');
 const listaTareas = document.getElementById('lista-tareas');
+
+// Convierte la fecha del formulario a un formato fácil de leer.
+function formatearFecha(fecha) {
+    const fechaLocal = new Date(`${fecha}T00:00:00`);
+
+    return new Intl.DateTimeFormat('es-MX', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }).format(fechaLocal);
+}
 
 // Función que crea una tarea nueva y la agrega a la lista
 function agregarTarea() {
     const texto = inputTarea.value.trim();
+    const fechaVencimiento = inputFecha.value;
 
     // No agregar tareas vacías
     if (texto === '') {
@@ -16,13 +29,26 @@ function agregarTarea() {
 
     // Crear el elemento de la lista
     const item = document.createElement('li');
-    item.textContent = texto;
     item.classList.add('tarea');
+
+    const descripcion = document.createElement('span');
+    descripcion.classList.add('texto-tarea');
+    descripcion.textContent = texto;
+    item.appendChild(descripcion);
+
+    if (fechaVencimiento !== '') {
+        const fecha = document.createElement('time');
+        fecha.classList.add('fecha-vencimiento');
+        fecha.dateTime = fechaVencimiento;
+        fecha.textContent = `Vence: ${formatearFecha(fechaVencimiento)}`;
+        item.appendChild(fecha);
+    }
 
     listaTareas.appendChild(item);
 
     // Limpiar el input para la siguiente tarea
     inputTarea.value = '';
+    inputFecha.value = '';
     inputTarea.focus();
 }
 

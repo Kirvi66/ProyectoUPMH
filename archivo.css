@@ -8,3 +8,10 @@ body{
     font-family: Arial, Helvetica, sans-serif;
     background:#f5f5f5;
 }
+
+.fecha-vencimiento {
+    display: block;
+    margin-top: 0.35rem;
+    color: #555;
+    font-size: 0.85rem;
+}
