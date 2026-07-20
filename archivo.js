@@ -6,6 +6,7 @@ const inputFecha = document.getElementById('fecha-vencimiento');
 const btnAgregar = document.getElementById('btn-agregar');
 const listaTareas = document.getElementById('lista-tareas');
 const contadorTerminadas = document.getElementById('contador-terminadas');
+let tareaEnEdicion = null;
 
 // Actualiza el número de tareas que el usuario marcó como terminadas.
 function actualizarContador() {
@@ -24,6 +25,46 @@ function formatearFecha(fecha) {
     }).format(fechaLocal);
 }
 
+// Crea, actualiza o retira la fecha visible de una tarea.
+function actualizarFecha(item, fechaVencimiento) {
+    let fecha = item.querySelector('.fecha-vencimiento');
+
+    if (fechaVencimiento === '') {
+        if (fecha !== null) {
+            fecha.remove();
+        }
+        return;
+    }
+
+    if (fecha === null) {
+        fecha = document.createElement('time');
+        fecha.classList.add('fecha-vencimiento');
+        item.querySelector('.acciones-tarea').before(fecha);
+    }
+
+    fecha.dateTime = fechaVencimiento;
+    fecha.textContent = `Vence: ${formatearFecha(fechaVencimiento)}`;
+}
+
+// Devuelve el formulario a su estado inicial después de agregar o editar.
+function reiniciarFormulario() {
+    tareaEnEdicion = null;
+    inputTarea.value = '';
+    inputFecha.value = '';
+    btnAgregar.textContent = 'Agregar';
+    btnAgregar.classList.remove('modo-edicion');
+    inputTarea.focus();
+}
+
+function crearBotonAccion(texto, clase, etiqueta) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.classList.add('btn-accion', clase);
+    boton.textContent = texto;
+    boton.setAttribute('aria-label', etiqueta);
+    return boton;
+}
+
 // Función que crea una tarea nueva y la agrega a la lista
 function agregarTarea() {
     const texto = inputTarea.value.trim();
@@ -31,6 +72,16 @@ function agregarTarea() {
 
     // No agregar tareas vacías
     if (texto === '') {
+        inputTarea.focus();
+        return;
+    }
+
+    if (tareaEnEdicion !== null) {
+        tareaEnEdicion.querySelector('.texto-tarea').textContent = texto;
+        tareaEnEdicion.querySelector('.marcar-tarea')
+            .setAttribute('aria-label', `Marcar "${texto}" como terminada`);
+        actualizarFecha(tareaEnEdicion, fechaVencimiento);
+        reiniciarFormulario();
         return;
     }
 
@@ -46,23 +97,21 @@ function agregarTarea() {
     const descripcion = document.createElement('span');
     descripcion.classList.add('texto-tarea');
     descripcion.textContent = texto;
+
+    const acciones = document.createElement('div');
+    acciones.classList.add('acciones-tarea');
+    acciones.appendChild(crearBotonAccion('Editar', 'btn-editar', `Editar "${texto}"`));
+    acciones.appendChild(crearBotonAccion('Eliminar', 'btn-eliminar', `Eliminar "${texto}"`));
+
     item.appendChild(casillaTerminada);
     item.appendChild(descripcion);
-
-    if (fechaVencimiento !== '') {
-        const fecha = document.createElement('time');
-        fecha.classList.add('fecha-vencimiento');
-        fecha.dateTime = fechaVencimiento;
-        fecha.textContent = `Vence: ${formatearFecha(fechaVencimiento)}`;
-        item.appendChild(fecha);
-    }
+    item.appendChild(acciones);
+    actualizarFecha(item, fechaVencimiento);
 
     listaTareas.appendChild(item);
 
-    // Limpiar el input para la siguiente tarea
-    inputTarea.value = '';
-    inputFecha.value = '';
-    inputTarea.focus();
+    // Limpiar el formulario para la siguiente tarea.
+    reiniciarFormulario();
 }
 
 // Agregar tarea al hacer clic en el botón
@@ -84,4 +133,31 @@ listaTareas.addEventListener('change', function (evento) {
     const item = evento.target.closest('.tarea');
     item.classList.toggle('terminada', evento.target.checked);
     actualizarContador();
+});
+
+// Carga una tarea en el formulario para editarla o la elimina de la lista.
+listaTareas.addEventListener('click', function (evento) {
+    const boton = evento.target.closest('.btn-accion');
+
+    if (boton === null) {
+        return;
+    }
+
+    const item = boton.closest('.tarea');
+
+    if (boton.classList.contains('btn-eliminar')) {
+        if (item === tareaEnEdicion) {
+            reiniciarFormulario();
+        }
+        item.remove();
+        actualizarContador();
+        return;
+    }
+
+    tareaEnEdicion = item;
+    inputTarea.value = item.querySelector('.texto-tarea').textContent;
+    inputFecha.value = item.querySelector('.fecha-vencimiento')?.dateTime ?? '';
+    btnAgregar.textContent = 'Guardar cambios';
+    btnAgregar.classList.add('modo-edicion');
+    inputTarea.focus();
 });

@@ -139,6 +139,10 @@ h1 {
     transform: translateY(-2px);
 }
 
+#btn-agregar.modo-edicion {
+    background: var(--acento);
+}
+
 #btn-agregar:focus-visible {
     outline: 3px solid rgba(225, 123, 76, 0.4);
     outline-offset: 2px;
@@ -180,7 +184,7 @@ h1 {
 
 .tarea {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 0.3rem 0.75rem;
     align-items: center;
     padding: 1rem;
@@ -207,6 +211,38 @@ h1 {
     grid-column: 2;
     color: var(--tinta-suave);
     font-size: 0.82rem;
+}
+
+.acciones-tarea {
+    display: flex;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    gap: 0.45rem;
+}
+
+.btn-accion {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 750;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 0.55rem;
+    cursor: pointer;
+}
+
+.btn-editar {
+    color: var(--azul);
+}
+
+.btn-eliminar {
+    color: #a23d38;
+}
+
+.btn-accion:hover,
+.btn-accion:focus-visible {
+    color: #fff;
+    background: var(--azul-noche);
+    border-color: var(--azul-noche);
 }
 
 .tarea.terminada {
@@ -236,5 +272,12 @@ h1 {
 
     #btn-agregar {
         width: 100%;
+    }
+
+    .acciones-tarea {
+        grid-column: 2;
+        grid-row: auto;
+        flex-wrap: wrap;
+        margin-top: 0.35rem;
     }
 }
