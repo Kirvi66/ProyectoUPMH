@@ -5,6 +5,13 @@ const inputTarea = document.getElementById('input-tarea');
 const inputFecha = document.getElementById('fecha-vencimiento');
 const btnAgregar = document.getElementById('btn-agregar');
 const listaTareas = document.getElementById('lista-tareas');
+const contadorTerminadas = document.getElementById('contador-terminadas');
+
+// Actualiza el número de tareas que el usuario marcó como terminadas.
+function actualizarContador() {
+    const tareasTerminadas = listaTareas.querySelectorAll('.tarea.terminada').length;
+    contadorTerminadas.textContent = tareasTerminadas;
+}
 
 // Convierte la fecha del formulario a un formato fácil de leer.
 function formatearFecha(fecha) {
@@ -31,9 +38,15 @@ function agregarTarea() {
     const item = document.createElement('li');
     item.classList.add('tarea');
 
+    const casillaTerminada = document.createElement('input');
+    casillaTerminada.type = 'checkbox';
+    casillaTerminada.classList.add('marcar-tarea');
+    casillaTerminada.setAttribute('aria-label', `Marcar "${texto}" como terminada`);
+
     const descripcion = document.createElement('span');
     descripcion.classList.add('texto-tarea');
     descripcion.textContent = texto;
+    item.appendChild(casillaTerminada);
     item.appendChild(descripcion);
 
     if (fechaVencimiento !== '') {
@@ -60,4 +73,15 @@ inputTarea.addEventListener('keydown', function (evento) {
     if (evento.key === 'Enter') {
         agregarTarea();
     }
+});
+
+// Permite marcar o desmarcar cualquier tarea y mantener el contador al día.
+listaTareas.addEventListener('change', function (evento) {
+    if (!evento.target.classList.contains('marcar-tarea')) {
+        return;
+    }
+
+    const item = evento.target.closest('.tarea');
+    item.classList.toggle('terminada', evento.target.checked);
+    actualizarContador();
 });
